@@ -27,21 +27,87 @@ public class DeTodo extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jDesktopPane1 = new javax.swing.JDesktopPane();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jmenuAdministracion = new javax.swing.JMenu();
+        menuGestion = new javax.swing.JMenuItem();
+        jMenuConsultas = new javax.swing.JMenu();
+        jmItemNombre = new javax.swing.JMenuItem();
+        jmItemPrecio = new javax.swing.JMenuItem();
+        jmItemRubro = new javax.swing.JMenuItem();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
+        jDesktopPane1.setLayout(jDesktopPane1Layout);
+        jDesktopPane1Layout.setHorizontalGroup(
+            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 388, Short.MAX_VALUE)
+        );
+        jDesktopPane1Layout.setVerticalGroup(
+            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 265, Short.MAX_VALUE)
+        );
+
+        jmenuAdministracion.setText("Administracion");
+
+        menuGestion.setText("Gestion de Productos");
+        jmenuAdministracion.add(menuGestion);
+
+        jMenuBar1.add(jmenuAdministracion);
+
+        jMenuConsultas.setText("Consultas");
+
+        jmItemNombre.setText("Consulta por Nombre");
+        jmItemNombre.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmItemNombreActionPerformed(evt);
+            }
+        });
+        jMenuConsultas.add(jmItemNombre);
+
+        jmItemPrecio.setText("Consulta por Precio");
+        jMenuConsultas.add(jmItemPrecio);
+
+        jmItemRubro.setText("Consulta por Rubro");
+        jmItemRubro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmItemRubroActionPerformed(evt);
+            }
+        });
+        jMenuConsultas.add(jmItemRubro);
+
+        jMenuBar1.add(jMenuConsultas);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jDesktopPane1)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jDesktopPane1)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jmItemNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmItemNombreActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jmItemNombreActionPerformed
+
+    private void jmItemRubroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmItemRubroActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jmItemRubroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,5 +145,13 @@ public class DeTodo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDesktopPane jDesktopPane1;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenu jMenuConsultas;
+    private javax.swing.JMenuItem jmItemNombre;
+    private javax.swing.JMenuItem jmItemPrecio;
+    private javax.swing.JMenuItem jmItemRubro;
+    private javax.swing.JMenu jmenuAdministracion;
+    private javax.swing.JMenuItem menuGestion;
     // End of variables declaration//GEN-END:variables
 }
