@@ -7,6 +7,8 @@ package DeTodoSA;
 
 import java.util.ArrayList;
 
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Anitabonita
@@ -18,6 +20,7 @@ public class DeTodo extends javax.swing.JFrame {
     /**
      * Creates new form DeTodo
      */
+    
     public DeTodo() {
         initComponents();
         cargarCategorias();
@@ -33,7 +36,8 @@ public class DeTodo extends javax.swing.JFrame {
         listaCategoria.add("Mascotas");
         listaCategoria.add("Panderia");
     }
-
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
