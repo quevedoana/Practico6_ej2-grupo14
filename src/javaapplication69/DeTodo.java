@@ -5,6 +5,8 @@
  */
 package javaapplication69;
 
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Anitabonita
@@ -14,10 +16,12 @@ public class DeTodo extends javax.swing.JFrame {
     /**
      * Creates new form DeTodo
      */
+    
     public DeTodo() {
         initComponents();
     }
-
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
