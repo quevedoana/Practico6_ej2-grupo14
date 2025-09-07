@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaapplication69;
+package DeTodoSA;
+
+import java.util.ArrayList;
 
 /**
  *
@@ -11,11 +13,25 @@ package javaapplication69;
  */
 public class DeTodo extends javax.swing.JFrame {
 
+    public static ArrayList<String> listaCategoria = new ArrayList<>();
+
     /**
      * Creates new form DeTodo
      */
     public DeTodo() {
         initComponents();
+        cargarCategorias();
+    }
+
+    public void cargarCategorias() {
+        listaCategoria.add("Comestible");
+        listaCategoria.add("Farmacia");
+        listaCategoria.add("Electronica");
+        listaCategoria.add("Ropa");
+        listaCategoria.add("Limpieza");
+        listaCategoria.add("Perfumeria");
+        listaCategoria.add("Mascotas");
+        listaCategoria.add("Panderia");
     }
 
     /**
@@ -42,16 +58,26 @@ public class DeTodo extends javax.swing.JFrame {
         escritorio.setLayout(escritorioLayout);
         escritorioLayout.setHorizontalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 583, Short.MAX_VALUE)
+            .addGap(0, 732, Short.MAX_VALUE)
         );
         escritorioLayout.setVerticalGroup(
             escritorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 447, Short.MAX_VALUE)
+            .addGap(0, 626, Short.MAX_VALUE)
         );
 
         jmenuAdministracion.setText("Administracion");
 
         menuGestion.setText("Gestion de Productos");
+        menuGestion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menuGestionMouseClicked(evt);
+            }
+        });
+        menuGestion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuGestionActionPerformed(evt);
+            }
+        });
         jmenuAdministracion.add(menuGestion);
 
         jMenuBar1.add(jmenuAdministracion);
@@ -85,14 +111,19 @@ public class DeTodo extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(escritorio)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(escritorio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(escritorio)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(escritorio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jmItemNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmItemNombreActionPerformed
@@ -102,6 +133,22 @@ public class DeTodo extends javax.swing.JFrame {
     private void jmItemRubroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmItemRubroActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jmItemRubroActionPerformed
+
+    private void menuGestionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuGestionMouseClicked
+        // TODO add your handling code here:
+     
+    }//GEN-LAST:event_menuGestionMouseClicked
+
+    private void menuGestionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGestionActionPerformed
+        // TODO add your handling code here:
+          escritorio.removeAll();
+        escritorio.repaint();
+        GestionDeProductos produ = new GestionDeProductos();
+        produ.setLocation((escritorio.getWidth() - produ.getWidth()) / 2, (escritorio.getHeight() - produ.getHeight()) / 2);
+        produ.setVisible(true);
+        escritorio.add(produ);
+        produ.toFront();
+    }//GEN-LAST:event_menuGestionActionPerformed
 
     /**
      * @param args the command line arguments

@@ -3,18 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaapplication69;
+package DeTodoSA;
 
 /**
  *
  * @author Anitabonita
  */
-public class ConsultaPorPrecio extends javax.swing.JInternalFrame {
+public class ConsultaPorRubro extends javax.swing.JInternalFrame {
 
     /**
-     * Creates new form ConsultaPorPrecio
+     * Creates new form ConsultaPorRubro
      */
-    public ConsultaPorPrecio() {
+    public ConsultaPorRubro() {
         initComponents();
     }
 
