@@ -10,7 +10,7 @@ import java.util.*;
  *
  * @author Anitabonita
  */
-public class Producto {
+public class Producto implements Comparable<Producto>{
     private int codigo;
     private String descripcion;
     private double precio;

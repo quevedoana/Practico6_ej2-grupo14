@@ -5,6 +5,7 @@
  */
 package DeTodoSA;
 
+import clases.Producto;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -16,23 +17,33 @@ public class ConsultaPorNombre extends javax.swing.JInternalFrame {
     /**
      * Creates new form ConsultaPorNombre
      */
-    public DefaultTableModel modelo = new DefaultTableModel() {
-
+    private DefaultTableModel modelo = new DefaultTableModel() {
+        
         public boolean isCellEditable(int fila, int column) {
             return false;
         }
     };
-    public void armarCabecera() {
+
+    private void armarCabecera() {
         modelo.addColumn("Codigo");
         modelo.addColumn("Descripcion");
         modelo.addColumn("Precio");
         modelo.addColumn("Categoria");
         modelo.addColumn("Stock");
+        jtProductos.setModel(modelo);
     }
+
+    private void cargarDatos() {
+        modelo.setRowCount(0);
+        for (Producto p : DeTodo.listaProductos) {
+            modelo.addRow(new Object[]{p.getCodigo(), p.getDescripcion(), p.getPrecio(), p.getCategoria(), p.getStock()});
+        }
+    }
+    
     public ConsultaPorNombre() {
         initComponents();
         armarCabecera();
-
+        cargarDatos();
         
     }
 
@@ -60,6 +71,12 @@ public class ConsultaPorNombre extends javax.swing.JInternalFrame {
         lblIngrese.setForeground(new java.awt.Color(0, 0, 0));
         lblIngrese.setText("Ingrese Descripcion:");
 
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNombreKeyReleased(evt);
+            }
+        });
+
         jtProductos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -84,7 +101,7 @@ public class ConsultaPorNombre extends javax.swing.JInternalFrame {
                     .addComponent(lblIngrese)
                     .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -94,9 +111,9 @@ public class ConsultaPorNombre extends javax.swing.JInternalFrame {
                 .addComponent(lblIngrese)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(316, 316, 316))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(88, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -108,12 +125,28 @@ public class ConsultaPorNombre extends javax.swing.JInternalFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 126, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void txtNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyReleased
+        // TODO add your handling code here:
+        String nombreIngresado = txtNombre.getText().trim().toLowerCase();
+        modelo.setRowCount(0);
+        if (nombreIngresado.isEmpty()) {
+            cargarDatos();            
+            return;
+        }
+        
+        for (Producto p : DeTodo.listaProductos) {
+            if (p.getDescripcion().toLowerCase().contains(nombreIngresado)) {
+                modelo.addRow(new Object[]{p.getCodigo(), p.getDescripcion(), p.getPrecio(), p.getCategoria(), p.getStock()});
+            }
+        }
+    }//GEN-LAST:event_txtNombreKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -26,6 +26,7 @@ public class DeTodo extends javax.swing.JFrame {
     public DeTodo() {
         initComponents();
         cargarCategorias();
+        preCarga();
     }
 
     public void cargarCategorias() {
@@ -36,7 +37,23 @@ public class DeTodo extends javax.swing.JFrame {
         listaCategoria.add("Limpieza");
         listaCategoria.add("Perfumeria");
         listaCategoria.add("Mascotas");
-        listaCategoria.add("Panderia");
+        listaCategoria.add("Panaderia");
+    }
+     public void preCarga(){
+        Producto produ1 = new Producto(1,"Arroz",1000.0,10,"Comestible");
+        listaProductos.add(produ1);
+        Producto produ2 = new Producto(2,"Fideos",1500.0,12,"Comestible");
+        listaProductos.add(produ2);
+        Producto produ3 = new Producto(3,"Paracetamol",3500.0,10,"Farmacia");
+        listaProductos.add(produ3);
+        Producto produ4 = new Producto(4,"212 vip",180000.0,5,"Perfumeria");
+        listaProductos.add(produ4);
+        Producto produ5 = new Producto(5,"Alimento para gato",30000.0,8,"Mascotas");
+        listaProductos.add(produ5);
+        Producto produ6 = new Producto(6,"Auriculares",20000.0,10,"Electronica");
+        listaProductos.add(produ6);
+        Producto produ7 = new Producto(7,"Pan para pancho",2500.0,10,"Panaderia");
+        listaProductos.add(produ7);         
     }
     
     
@@ -89,8 +106,18 @@ public class DeTodo extends javax.swing.JFrame {
         jMenuBar1.add(jmenuAdministracion);
 
         jMenuConsultas.setText("Consultas");
+        jMenuConsultas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuConsultasActionPerformed(evt);
+            }
+        });
 
         jmItemNombre.setText("Consulta por Nombre");
+        jmItemNombre.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jmItemNombreMouseClicked(evt);
+            }
+        });
         jmItemNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmItemNombreActionPerformed(evt);
@@ -134,6 +161,13 @@ public class DeTodo extends javax.swing.JFrame {
 
     private void jmItemNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmItemNombreActionPerformed
         // TODO add your handling code here:
+        escritorio.removeAll();
+        escritorio.repaint();
+        ConsultaPorNombre bc = new ConsultaPorNombre();
+        bc.setLocation((escritorio.getWidth() - bc.getWidth()) / 2, (escritorio.getHeight() - bc.getHeight()) / 2);
+        bc.setVisible(true);
+        escritorio.add(bc);
+        bc.toFront();
     }//GEN-LAST:event_jmItemNombreActionPerformed
 
     private void jmItemRubroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmItemRubroActionPerformed
@@ -155,6 +189,16 @@ public class DeTodo extends javax.swing.JFrame {
         escritorio.add(produ);
         produ.toFront();
     }//GEN-LAST:event_menuGestionActionPerformed
+
+    private void jmItemNombreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jmItemNombreMouseClicked
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jmItemNombreMouseClicked
+
+    private void jMenuConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuConsultasActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jMenuConsultasActionPerformed
 
     /**
      * @param args the command line arguments
