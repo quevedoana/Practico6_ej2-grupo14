@@ -5,9 +5,10 @@
  */
 package DeTodoSA;
 
+import clases.Producto;
 import java.util.ArrayList;
+import java.util.TreeSet;
 
-import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -16,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 public class DeTodo extends javax.swing.JFrame {
 
     public static ArrayList<String> listaCategoria = new ArrayList<>();
+    public static TreeSet<Producto> listaProductos = new TreeSet<>();
 
     /**
      * Creates new form DeTodo
