@@ -172,6 +172,13 @@ public class DeTodo extends javax.swing.JFrame {
 
     private void jmItemRubroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmItemRubroActionPerformed
         // TODO add your handling code here:
+        escritorio.removeAll();
+        escritorio.repaint();
+        ConsultaPorRubro produ = new ConsultaPorRubro();
+        produ.setLocation((escritorio.getWidth() - produ.getWidth()) / 2, (escritorio.getHeight() - produ.getHeight()) / 2);
+        produ.setVisible(true);
+        escritorio.add(produ);
+        produ.toFront();
     }//GEN-LAST:event_jmItemRubroActionPerformed
 
     private void menuGestionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuGestionMouseClicked

@@ -5,19 +5,61 @@
  */
 package DeTodoSA;
 
+import clases.Producto;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Anitabonita
  */
 public class ConsultaPorRubro extends javax.swing.JInternalFrame {
+private DefaultTableModel modelo = new DefaultTableModel() {
 
+        public boolean isCellEditable(int fila, int column) {
+            return false;
+        }
+    };
     /**
      * Creates new form ConsultaPorRubro
      */
     public ConsultaPorRubro() {
         initComponents();
+        armarCabecera();
+        cargaComboRubros();
+        cargarTabla();
     }
-
+    private void armarCabecera(){
+        
+        modelo.addColumn("Codigo");
+        modelo.addColumn("Descripcion");
+        modelo.addColumn("Precio");
+        modelo.addColumn("Categoria");
+        modelo.addColumn("Stock");
+        jTablaBuscarRubro.setModel(modelo);
+    }
+    
+    private void cargaComboRubros(){
+        DefaultComboBoxModel<String> rubros = new DefaultComboBoxModel<>();
+        rubros.addElement("Seleccionar una categoria");
+        
+        if(DeTodo.listaCategoria.isEmpty()){
+            rubros.addElement("No hay categorias cargadas");
+        }else{
+            for (String c : DeTodo.listaCategoria) {
+                rubros.addElement(c);
+            }
+        }
+        jcbCategoria.setModel(rubros);
+    }
+    private void cargarTabla(){
+        modelo.setRowCount(0);
+        for (Producto listaProducto : DeTodo.listaProductos) {
+            modelo.addRow(new Object[]{listaProducto.getCodigo(),listaProducto.getDescripcion(),listaProducto.getPrecio(),listaProducto.getCategoria(),listaProducto.getStock()});
+            
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -27,21 +69,88 @@ public class ConsultaPorRubro extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jcbCategoria = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTablaBuscarRubro = new javax.swing.JTable();
+
+        jLabel1.setText("Listado por Rubro");
+
+        jLabel2.setText("Rubro:");
+
+        jcbCategoria.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jcbCategoriaItemStateChanged(evt);
+            }
+        });
+
+        jTablaBuscarRubro.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTablaBuscarRubro);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 394, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(90, 90, 90)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jcbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(138, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 274, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jcbCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(127, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jcbCategoriaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jcbCategoriaItemStateChanged
+        // TODO add your handling code here:
+        String select=jcbCategoria.getSelectedItem().toString();
+        modelo.setRowCount(0);
+        for (Producto aux : DeTodo.listaProductos) {
+            if (aux.getCategoria().equalsIgnoreCase(select)) {
+               modelo.addRow(new Object[]{aux.getCodigo(),aux.getDescripcion(),aux.getPrecio(),aux.getCategoria(),aux.getStock()}); 
+            }
+        }
+    }//GEN-LAST:event_jcbCategoriaItemStateChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTablaBuscarRubro;
+    private javax.swing.JComboBox<String> jcbCategoria;
     // End of variables declaration//GEN-END:variables
 }
