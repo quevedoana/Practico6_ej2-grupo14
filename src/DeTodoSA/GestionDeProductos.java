@@ -33,6 +33,7 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
         cargarCombo();
         actualizarTabla();
         limpiarSeleccion();
+        this.setClosable(true);
 
         comboFiltroCategorias.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -223,6 +224,7 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
             for (Producto p : DeTodo.listaProductos) {
                 if (p.getCodigo() == codigo) {
                     JOptionPane.showMessageDialog(this, "El código " + codigo + " ya existe", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
 
@@ -293,10 +295,11 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
             String categoria = comboRubro.getSelectedItem().toString();
             int stock = (Integer) spinerStock.getValue();
 
-            // Verifica si el nuevo codigo ya existe (excepto para el producto actual)
+            // Verifica si el nuevo codigo ya existe
             for (Producto p : DeTodo.listaProductos) {
                 if (nuevoCodigo != codigoOriginal && p.getCodigo() == codigoOriginal) {
                     JOptionPane.showMessageDialog(this, "El código " + nuevoCodigo + " ya existe", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
             }
 
@@ -405,6 +408,10 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
 
         jLabel5.setText("Precio:");
 
+        comboRubro.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        spinerStock.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -472,6 +479,7 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(tablaProductos);
 
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/lupa.png"))); // NOI18N
+        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBuscar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnBuscarMouseClicked(evt);
@@ -479,17 +487,21 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
         });
 
         btnCerrar.setText("Cerrar");
+        btnCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCerrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnCerrarMouseClicked(evt);
             }
         });
 
+        comboFiltroCategorias.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel6.setText("Filtrar por Categoria:");
 
         btnAgregarNuevo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/icons8-producto-usado-50.png"))); // NOI18N
         btnAgregarNuevo.setText("Nuevo");
+        btnAgregarNuevo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAgregarNuevo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnAgregarNuevoMouseClicked(evt);
@@ -498,6 +510,7 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/icons8-caja-de-producto-de-pelo-corto-50.png"))); // NOI18N
         btnGuardar.setText("Guardar");
+        btnGuardar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnGuardar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnGuardarMouseClicked(evt);
@@ -506,6 +519,7 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
 
         btnAlctualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/icons8-marca-doble-30.png"))); // NOI18N
         btnAlctualizar.setText("Actualizar");
+        btnAlctualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAlctualizar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnAlctualizarMouseClicked(evt);
@@ -514,6 +528,7 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
 
         btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
         btnEliminar.setText("Eliminar");
+        btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnEliminar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnEliminarMouseClicked(evt);

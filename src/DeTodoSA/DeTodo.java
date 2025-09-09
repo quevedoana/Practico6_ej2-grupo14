@@ -9,7 +9,6 @@ import clases.Producto;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
-
 /**
  *
  * @author Anitabonita
@@ -18,11 +17,10 @@ public class DeTodo extends javax.swing.JFrame {
 
     public static ArrayList<String> listaCategoria = new ArrayList<>();
     public static TreeSet<Producto> listaProductos = new TreeSet<>();
-
+   
     /**
      * Creates new form DeTodo
      */
-    
     public DeTodo() {
         initComponents();
         cargarCategorias();
@@ -39,24 +37,24 @@ public class DeTodo extends javax.swing.JFrame {
         listaCategoria.add("Mascotas");
         listaCategoria.add("Panaderia");
     }
-     public void preCarga(){
-        Producto produ1 = new Producto(1,"Arroz",1000.0,10,"Comestible");
+
+    public void preCarga() {
+        Producto produ1 = new Producto(1, "Arroz", 1000.0, 10, "Comestible");
         listaProductos.add(produ1);
-        Producto produ2 = new Producto(2,"Fideos",1500.0,12,"Comestible");
+        Producto produ2 = new Producto(2, "Fideos", 1500.0, 12, "Comestible");
         listaProductos.add(produ2);
-        Producto produ3 = new Producto(3,"Paracetamol",3500.0,10,"Farmacia");
+        Producto produ3 = new Producto(3, "Paracetamol", 3500.0, 10, "Farmacia");
         listaProductos.add(produ3);
-        Producto produ4 = new Producto(4,"212 vip",180000.0,5,"Perfumeria");
+        Producto produ4 = new Producto(4, "212 vip", 180000.0, 5, "Perfumeria");
         listaProductos.add(produ4);
-        Producto produ5 = new Producto(5,"Alimento para gato",30000.0,8,"Mascotas");
+        Producto produ5 = new Producto(5, "Alimento para gato", 30000.0, 8, "Mascotas");
         listaProductos.add(produ5);
-        Producto produ6 = new Producto(6,"Auriculares",20000.0,10,"Electronica");
+        Producto produ6 = new Producto(6, "Auriculares", 20000.0, 10, "Electronica");
         listaProductos.add(produ6);
-        Producto produ7 = new Producto(7,"Pan para pancho",2500.0,10,"Panaderia");
-        listaProductos.add(produ7);         
+        Producto produ7 = new Producto(7, "Pan para pancho", 2500.0, 10, "Panaderia");
+        listaProductos.add(produ7);
     }
-    
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -74,6 +72,7 @@ public class DeTodo extends javax.swing.JFrame {
         jmItemNombre = new javax.swing.JMenuItem();
         jmItemPrecio = new javax.swing.JMenuItem();
         jmItemRubro = new javax.swing.JMenuItem();
+        Salir = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -89,8 +88,10 @@ public class DeTodo extends javax.swing.JFrame {
         );
 
         jmenuAdministracion.setText("Administracion");
+        jmenuAdministracion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         menuGestion.setText("Gestion de Productos");
+        menuGestion.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         menuGestion.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 menuGestionMouseClicked(evt);
@@ -106,6 +107,7 @@ public class DeTodo extends javax.swing.JFrame {
         jMenuBar1.add(jmenuAdministracion);
 
         jMenuConsultas.setText("Consultas");
+        jMenuConsultas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jMenuConsultas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuConsultasActionPerformed(evt);
@@ -113,6 +115,7 @@ public class DeTodo extends javax.swing.JFrame {
         });
 
         jmItemNombre.setText("Consulta por Nombre");
+        jmItemNombre.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jmItemNombre.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jmItemNombreMouseClicked(evt);
@@ -126,9 +129,16 @@ public class DeTodo extends javax.swing.JFrame {
         jMenuConsultas.add(jmItemNombre);
 
         jmItemPrecio.setText("Consulta por Precio");
+        jmItemPrecio.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jmItemPrecio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmItemPrecioActionPerformed(evt);
+            }
+        });
         jMenuConsultas.add(jmItemPrecio);
 
         jmItemRubro.setText("Consulta por Rubro");
+        jmItemRubro.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jmItemRubro.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmItemRubroActionPerformed(evt);
@@ -137,6 +147,15 @@ public class DeTodo extends javax.swing.JFrame {
         jMenuConsultas.add(jmItemRubro);
 
         jMenuBar1.add(jMenuConsultas);
+
+        Salir.setText("Salir");
+        Salir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        Salir.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                SalirMouseClicked(evt);
+            }
+        });
+        jMenuBar1.add(Salir);
 
         setJMenuBar(jMenuBar1);
 
@@ -159,17 +178,6 @@ public class DeTodo extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jmItemNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmItemNombreActionPerformed
-        // TODO add your handling code here:
-        escritorio.removeAll();
-        escritorio.repaint();
-        ConsultaPorNombre bc = new ConsultaPorNombre();
-        bc.setLocation((escritorio.getWidth() - bc.getWidth()) / 2, (escritorio.getHeight() - bc.getHeight()) / 2);
-        bc.setVisible(true);
-        escritorio.add(bc);
-        bc.toFront();
-    }//GEN-LAST:event_jmItemNombreActionPerformed
-
     private void jmItemRubroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmItemRubroActionPerformed
         // TODO add your handling code here:
         escritorio.removeAll();
@@ -183,12 +191,12 @@ public class DeTodo extends javax.swing.JFrame {
 
     private void menuGestionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuGestionMouseClicked
         // TODO add your handling code here:
-     
+
     }//GEN-LAST:event_menuGestionMouseClicked
 
     private void menuGestionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuGestionActionPerformed
         // TODO add your handling code here:
-          escritorio.removeAll();
+        escritorio.removeAll();
         escritorio.repaint();
         GestionDeProductos produ = new GestionDeProductos();
         produ.setLocation((escritorio.getWidth() - produ.getWidth()) / 2, (escritorio.getHeight() - produ.getHeight()) / 2);
@@ -197,15 +205,42 @@ public class DeTodo extends javax.swing.JFrame {
         produ.toFront();
     }//GEN-LAST:event_menuGestionActionPerformed
 
-    private void jmItemNombreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jmItemNombreMouseClicked
-        // TODO add your handling code here:
-        
-    }//GEN-LAST:event_jmItemNombreMouseClicked
-
     private void jMenuConsultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuConsultasActionPerformed
         // TODO add your handling code here:
-        
+
     }//GEN-LAST:event_jMenuConsultasActionPerformed
+
+    private void jmItemNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmItemNombreActionPerformed
+        // TODO add your handling code here:
+        escritorio.removeAll();
+        escritorio.repaint();
+        ConsultaPorNombre bc = new ConsultaPorNombre();
+        bc.setLocation((escritorio.getWidth() - bc.getWidth()) / 2, (escritorio.getHeight() - bc.getHeight()) / 2);
+        bc.setVisible(true);
+        escritorio.add(bc);
+        bc.toFront();
+    }//GEN-LAST:event_jmItemNombreActionPerformed
+
+    private void jmItemNombreMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jmItemNombreMouseClicked
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jmItemNombreMouseClicked
+
+    private void SalirMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_SalirMouseClicked
+        // TODO add your handling code here:
+        System.exit(0);
+    }//GEN-LAST:event_SalirMouseClicked
+
+    private void jmItemPrecioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmItemPrecioActionPerformed
+        // TODO add your handling code here:
+        escritorio.removeAll();
+        escritorio.repaint();
+        ConsultaPorPrecio pr = new ConsultaPorPrecio();
+        pr.setLocation((escritorio.getWidth() - pr.getWidth()) / 2, (escritorio.getHeight() - pr.getHeight()) / 2);
+        pr.setVisible(true);
+        escritorio.add(pr);
+        pr.toFront();
+    }//GEN-LAST:event_jmItemPrecioActionPerformed
 
     /**
      * @param args the command line arguments
@@ -243,6 +278,7 @@ public class DeTodo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu Salir;
     private javax.swing.JDesktopPane escritorio;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu jMenuConsultas;

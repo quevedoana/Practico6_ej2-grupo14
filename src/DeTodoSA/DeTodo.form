@@ -7,11 +7,17 @@
         <Menu class="javax.swing.JMenu" name="jmenuAdministracion">
           <Properties>
             <Property name="text" type="java.lang.String" value="Administracion"/>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Hand Cursor"/>
+            </Property>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="menuGestion">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Gestion de Productos"/>
+                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                  <Color id="Hand Cursor"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="menuGestionMouseClicked"/>
@@ -23,6 +29,9 @@
         <Menu class="javax.swing.JMenu" name="jMenuConsultas">
           <Properties>
             <Property name="text" type="java.lang.String" value="Consultas"/>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Hand Cursor"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuConsultasActionPerformed"/>
@@ -31,6 +40,9 @@
             <MenuItem class="javax.swing.JMenuItem" name="jmItemNombre">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Consulta por Nombre"/>
+                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                  <Color id="Hand Cursor"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jmItemNombreMouseClicked"/>
@@ -40,17 +52,37 @@
             <MenuItem class="javax.swing.JMenuItem" name="jmItemPrecio">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Consulta por Precio"/>
+                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                  <Color id="Hand Cursor"/>
+                </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmItemPrecioActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jmItemRubro">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Consulta por Rubro"/>
+                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                  <Color id="Hand Cursor"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmItemRubroActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
+        </Menu>
+        <Menu class="javax.swing.JMenu" name="Salir">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Salir"/>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Hand Cursor"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="SalirMouseClicked"/>
+          </Events>
         </Menu>
       </SubComponents>
     </Menu>
