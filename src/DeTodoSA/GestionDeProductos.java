@@ -29,7 +29,16 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
      */
     public GestionDeProductos() {
         initComponents();
+        initTabla();
         cargarCombo();
+        actualizarTabla();
+        limpiarSeleccion();
+
+        comboFiltroCategorias.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                filtrarPorCategoria();
+            }
+        });
 
         tablaProductos.addMouseListener(new MouseAdapter() {
             @Override
@@ -38,10 +47,9 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
             }
         });
         btnGuardar.setEnabled(false);
-        initTabla();
-        validaciones();
     }
 
+    //inicializar tabla
     private void initTabla() {
         tabla = new DefaultTableModel() {
             @Override
@@ -59,21 +67,38 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
         tablaProductos.setModel(tabla);
     }
 
+    //cargar lo combo box
     public void cargarCombo() {
-        DefaultComboBoxModel<String> categoria = new DefaultComboBoxModel<>();
-        categoria.addElement("Seleccionar una categoria");
+        // Modelo para el combo de filtro
+        DefaultComboBoxModel<String> categoriaFiltro = new DefaultComboBoxModel<>();
+        categoriaFiltro.addElement("Seleccionar una categoria");
         if (DeTodo.listaCategoria.isEmpty()) {
-            categoria.addElement("No hay categorias cargadas");
+            categoriaFiltro.addElement("No hay categorias cargadas");
         } else {
             for (String c : DeTodo.listaCategoria) {
-                categoria.addElement(c);
+                categoriaFiltro.addElement(c);
             }
         }
-        comboFiltroCategorias.setModel(categoria);
-        comboRubro.setModel(categoria);
+        comboFiltroCategorias.setModel(categoriaFiltro);
+
+        // Modelo para el combo de rubro
+        DefaultComboBoxModel<String> categoriaRubro = new DefaultComboBoxModel<>();
+        categoriaRubro.addElement("Seleccionar una categoria");
+        if (DeTodo.listaCategoria.isEmpty()) {
+            categoriaRubro.addElement("No hay categorias cargadas");
+        } else {
+            for (String c : DeTodo.listaCategoria) {
+                categoriaRubro.addElement(c);
+            }
+        }
+        comboRubro.setModel(categoriaRubro);
     }
 
+    // seleccionar un producto de la tabla
     private void seleccionarProductoDeTabla() {
+        btnBuscar.setEnabled(false);
+        btnAgregarNuevo.setEnabled(false);
+        btnAlctualizar.setEnabled(false);
         int filaSeleccionada = tablaProductos.getSelectedRow();
         if (filaSeleccionada >= 0) {
             int codigo = (Integer) tabla.getValueAt(filaSeleccionada, 0);
@@ -85,7 +110,6 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
                     textPrecio.setText(String.valueOf(p.getPrecio()));
                     spinerStock.setValue(p.getStock());
                     comboRubro.setSelectedItem(p.getCategoria());
-
                     habilitarBotonesEdicion();
                     break;
                 }
@@ -93,21 +117,14 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
         }
     }
 
+    //habilitar botones
     private void habilitarBotonesEdicion() {
-        btnGuardar.setEnabled(false);
+        btnGuardar.setEnabled(true);
         btnAlctualizar.setEnabled(true);
         btnEliminar.setEnabled(true);
     }
 
-
-    private void habilitarCampos(boolean habilitar) {
-        textCodigo.setEnabled(habilitar);
-        textDescripcion.setEnabled(habilitar);
-        textPrecio.setEnabled(habilitar);
-        spinerStock.setEnabled(habilitar);
-        comboRubro.setEnabled(habilitar);
-    }
-
+    //limpiar campos
     private void limpiarCampos() {
         textCodigo.setText("");
         textDescripcion.setText("");
@@ -117,14 +134,13 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
         tablaProductos.clearSelection();
     }
 
-    
-
+    //fitro por categoria
     private void filtrarPorCategoria() {
         String categoriaSeleccionada = comboFiltroCategorias.getSelectedItem().toString();
 
         if (categoriaSeleccionada.equals("Seleccionar una categoria")
                 || categoriaSeleccionada.equals("No hay categorias cargadas")) {
-            actualizarTabla(); // Mostrar todos
+            actualizarTabla();
             return;
         }
 
@@ -142,24 +158,7 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
         }
     }
 
-    private void nuevoProducto() {
-        limpiarCampos();
-        habilitarCampos(true);
-        btnGuardar.setEnabled(true);
-        btnAlctualizar.setEnabled(false);
-        btnEliminar.setEnabled(false);
-        textCodigo.requestFocus();
-    }
-
-    private boolean existeCodigo(int codigo) {
-        for (Producto p : DeTodo.listaProductos) {
-            if (p.getCodigo() == codigo) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    //acualizar tabla con todos los productos
     private void actualizarTabla() {
         tabla.setRowCount(0);
         for (Producto p : DeTodo.listaProductos) {
@@ -173,104 +172,190 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
         }
     }
 
+    //restaurar botones 
+    private void limpiarSeleccion() {
+        tablaProductos.clearSelection();
+        btnAgregarNuevo.setEnabled(true);
+        btnBuscar.setEnabled(true);
+        btnGuardar.setEnabled(false);
+        btnAlctualizar.setEnabled(true);
+        btnEliminar.setEnabled(false);
+    }
 
-    private boolean validarCampos() {
+    private void agregarProducto() {
+        try {
+            //Controles
+            if (textCodigo.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Ingrese el codigo del producto", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (textPrecio.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Ingrese el precio del producto", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (textDescripcion.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Ingrese la descripcion del producto", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                double precio = Double.parseDouble(textPrecio.getText());
+                if (precio <= 0) {
+                    JOptionPane.showMessageDialog(this, "El precio debe ser mayor a 0", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Precio invalido", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (comboRubro.getSelectedIndex() <= 0) {
+                JOptionPane.showMessageDialog(this, "Seleccione una categoria valida", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            int codigo = Integer.parseInt(textCodigo.getText().trim());
+            String descripcion = textDescripcion.getText().trim();
+            double precio = Double.parseDouble(textPrecio.getText().trim());
+            String categoria = comboRubro.getSelectedItem().toString();
+            int stock = (Integer) spinerStock.getValue();
+
+            // Verifica si el codigo ya existe
+            for (Producto p : DeTodo.listaProductos) {
+                if (p.getCodigo() == codigo) {
+                    JOptionPane.showMessageDialog(this, "El código " + codigo + " ya existe", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            // Verifica que se seleccion una categoria valida
+            if (categoria.equals("Seleccionar una categoria") || categoria.equals("No hay categorias cargadas")) {
+                JOptionPane.showMessageDialog(this, "Seleccione una categoria valida", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Producto nuevoProducto = new Producto(codigo, descripcion, precio, stock, categoria);
+            DeTodo.listaProductos.add(nuevoProducto);
+
+            JOptionPane.showMessageDialog(this, "Producto agregado exitosamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+
+            limpiarCampos();
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error en el formato de los numeros: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+        }
+    }
+
+    private void eliminarProducto() {
+        int filaSeleccionada = tablaProductos.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un producto para eliminar", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int codigo = (Integer) tabla.getValueAt(filaSeleccionada, 0);
+        String descripcion = tabla.getValueAt(filaSeleccionada, 1).toString();
+
+        int confirmacion = JOptionPane.showConfirmDialog(this,
+                "¿Esta seguro de que desea eliminar el producto:\n"
+                + descripcion + " (Codigo: " + codigo + ")?",
+                "Confirmar eliminacion",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            // Buscar y eliminar el producto
+            Iterator<Producto> iterator = DeTodo.listaProductos.iterator();
+            while (iterator.hasNext()) {
+                Producto p = iterator.next();
+                if (p.getCodigo() == codigo) {
+                    iterator.remove();
+                    break;
+                }
+            }
+
+            JOptionPane.showMessageDialog(this, "Producto eliminado exitosamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+
+            limpiarCampos();
+            limpiarSeleccion();
+        }
+    }
+
+    private void guardarProducto() {
+        int filaSeleccionada = tablaProductos.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un producto para editar", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            int codigoOriginal = (Integer) tabla.getValueAt(filaSeleccionada, 0);
+            int nuevoCodigo = Integer.parseInt(textCodigo.getText().trim());
+            String descripcion = textDescripcion.getText().trim();
+            double precio = Double.parseDouble(textPrecio.getText().trim());
+            String categoria = comboRubro.getSelectedItem().toString();
+            int stock = (Integer) spinerStock.getValue();
+
+            // Verifica si el nuevo codigo ya existe (excepto para el producto actual)
+            for (Producto p : DeTodo.listaProductos) {
+                if (nuevoCodigo != codigoOriginal && p.getCodigo() == codigoOriginal) {
+                    JOptionPane.showMessageDialog(this, "El código " + nuevoCodigo + " ya existe", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            // Buscar y actualizar el producto
+            for (Producto p : DeTodo.listaProductos) {
+                if (p.getCodigo() == codigoOriginal) {
+                    p.setCodigo(nuevoCodigo);
+                    p.setDescripcion(descripcion);
+                    p.setPrecio(precio);
+                    p.setCategoria(categoria);
+                    p.setStock(stock);
+                    break;
+                }
+            }
+
+            JOptionPane.showMessageDialog(this, "Producto guardado exitosamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+
+            limpiarCampos();
+            limpiarSeleccion();
+
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Error en el formato de los numeros", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void buscarProducto() {
         if (textCodigo.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Ingrese el código del producto", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        if (textDescripcion.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Ingrese la descripción del producto", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        if (textPrecio.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Ingrese el precio del producto", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
+            JOptionPane.showMessageDialog(this, "Ingrese un codigo para buscar", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
         try {
-            double precio = Double.parseDouble(textPrecio.getText());
-            if (precio <= 0) {
-                JOptionPane.showMessageDialog(this, "El precio debe ser mayor a 0", "Error", JOptionPane.ERROR_MESSAGE);
-                return false;
+            int codigo = Integer.parseInt(textCodigo.getText().trim());
+            tabla.setRowCount(0); //Limpiar tabla
+
+            for (Producto p : DeTodo.listaProductos) {
+                if (p.getCodigo() == codigo) {
+                    tabla.addRow(new Object[]{
+                        p.getCodigo(),
+                        p.getDescripcion(),
+                        p.getPrecio(),
+                        p.getCategoria(),
+                        p.getStock()
+                    });
+                    JOptionPane.showMessageDialog(this, "Producto Encontrado: " + p.getCodigo() + "(" + p.getDescripcion() + ")", "Exito", JOptionPane.INFORMATION_MESSAGE);
+                    return;
+                }
+
             }
+
+            JOptionPane.showMessageDialog(this, "No se encontro ningun producto con el codigo " + codigo, "Busqueda", JOptionPane.INFORMATION_MESSAGE);
+
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Precio inválido", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
+            JOptionPane.showMessageDialog(this, "Codigo invalido", "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-        if (comboRubro.getSelectedIndex() <= 0) {
-            JOptionPane.showMessageDialog(this, "Seleccione una categoría válida", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-
-        return true;
     }
 
-    private void validaciones() {
-        // Validar que solo se ingresen números en código
-        textCodigo.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-                if (!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
-                    e.consume();
-                    JOptionPane.showMessageDialog(null, "Solo se permiten números en el código", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-        // Validar que solo se ingresen números y punto en precio
-        textPrecio.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-                String texto = textPrecio.getText();
-
-                if (!Character.isDigit(c) && c != '.' && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) {
-                    e.consume();
-                    JOptionPane.showMessageDialog(null, "Solo se permiten números y punto decimal en el precio", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-
-                // Validar que solo haya un punto decimal
-                if (c == '.' && texto.contains(".")) {
-                    e.consume();
-                    JOptionPane.showMessageDialog(null, "Solo se permite un punto decimal", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-        // Eventos para limpiar selección al escribir
-        /*textCodigo.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                limpiarSeleccion();
-            }
-        });
-
-        textDescripcion.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                limpiarSeleccion();
-            }
-        });
-
-        textPrecio.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                limpiarSeleccion();
-            }
-        });
-
-        // Evento para el combo de filtro
-        comboFiltroCategorias.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                filtrarPorCategoria();
-            }
-        });*/
-
+    private void tablaProductosPerformed(java.awt.event.ActionEvent evt) {
+        seleccionarProductoDeTabla();
     }
 
     /**
@@ -288,14 +373,11 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        textCodigo = new javax.swing.JTextPane();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        textDescripcion = new javax.swing.JTextPane();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        textPrecio = new javax.swing.JTextPane();
         comboRubro = new javax.swing.JComboBox<>();
         spinerStock = new javax.swing.JSpinner();
+        textCodigo = new javax.swing.JTextField();
+        textDescripcion = new javax.swing.JTextField();
+        textPrecio = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaProductos = new javax.swing.JTable();
         btnBuscar = new javax.swing.JButton();
@@ -323,18 +405,6 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
 
         jLabel5.setText("Precio:");
 
-        jScrollPane2.setViewportView(textCodigo);
-
-        jScrollPane3.setViewportView(textDescripcion);
-
-        jScrollPane4.setViewportView(textPrecio);
-
-        comboRubro.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                comboRubroActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -350,34 +420,34 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2)
-                            .addComponent(jScrollPane3)
-                            .addComponent(jScrollPane4)
-                            .addComponent(comboRubro, 0, 273, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(textPrecio, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textDescripcion, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textCodigo, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(comboRubro, javax.swing.GroupLayout.Alignment.LEADING, 0, 273, Short.MAX_VALUE))
                         .addGap(25, 25, 25))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(spinerStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(spinerStock, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(15, 15, 15)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(28, 28, 28))
+                            .addComponent(textPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(31, 31, 31))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(comboRubro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel2)))
@@ -407,16 +477,11 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
                 btnBuscarMouseClicked(evt);
             }
         });
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
-            }
-        });
 
         btnCerrar.setText("Cerrar");
-        btnCerrar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCerrarActionPerformed(evt);
+        btnCerrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCerrarMouseClicked(evt);
             }
         });
 
@@ -430,14 +495,14 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
                 btnAgregarNuevoMouseClicked(evt);
             }
         });
-        btnAgregarNuevo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarNuevoActionPerformed(evt);
-            }
-        });
 
         btnGuardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/icons8-caja-de-producto-de-pelo-corto-50.png"))); // NOI18N
         btnGuardar.setText("Guardar");
+        btnGuardar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnGuardarMouseClicked(evt);
+            }
+        });
 
         btnAlctualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/icons8-marca-doble-30.png"))); // NOI18N
         btnAlctualizar.setText("Actualizar");
@@ -446,14 +511,14 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
                 btnAlctualizarMouseClicked(evt);
             }
         });
-        btnAlctualizar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAlctualizarActionPerformed(evt);
-            }
-        });
 
         btnEliminar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/eliminar.png"))); // NOI18N
         btnEliminar.setText("Eliminar");
+        btnEliminar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnEliminarMouseClicked(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel7.setText("Gestión de Productos");
@@ -513,82 +578,46 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
                         .addGap(35, 35, 35)
                         .addComponent(btnCerrar)))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnEliminar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnAgregarNuevo)
-                        .addComponent(btnGuardar)
-                        .addComponent(btnAlctualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAgregarNuevo)
+                    .addComponent(btnGuardar)
+                    .addComponent(btnAlctualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
-        // TODO add your handling code here:
-        this.dispose();
-    }//GEN-LAST:event_btnCerrarActionPerformed
-
-    private void comboRubroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboRubroActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_comboRubroActionPerformed
-
-    private void btnAgregarNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarNuevoActionPerformed
-        // TODO add your handling code here:  
-    }//GEN-LAST:event_btnAgregarNuevoActionPerformed
-
     private void btnBuscarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnBuscarMouseClicked
         // TODO add your handling code here:
+        buscarProducto();
     }//GEN-LAST:event_btnBuscarMouseClicked
-
-    private void btnAlctualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlctualizarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAlctualizarActionPerformed
 
     private void btnAlctualizarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAlctualizarMouseClicked
         // TODO add your handling code here:
         actualizarTabla();
     }//GEN-LAST:event_btnAlctualizarMouseClicked
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnBuscarActionPerformed
-
     private void btnAgregarNuevoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAgregarNuevoMouseClicked
         // TODO add your handling code here:
-        try {
-            int codigo = Integer.parseInt(textCodigo.getText());
-            String descrip = textDescripcion.getText();
-            double precio = Double.parseDouble(textPrecio.getText());
-            String cate = comboFiltroCategorias.getSelectedItem().toString();
-            int stock = (Integer) spinerStock.getValue();
-
-            // Verificar si el código ya existe
-            if (existeCodigo(codigo)) {
-                JOptionPane.showMessageDialog(this, "El código " + codigo + " ya existe", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Verificar que se seleccionó una categoría válida
-            if (cate.equals("Seleccionar una categoria") || cate.equals("No hay categorias cargadas")) {
-                JOptionPane.showMessageDialog(this, "Seleccione una categoría válida", "Error", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            Producto cargado = new Producto(codigo, descrip, precio, stock, cate);
-            DeTodo.listaProductos.add(cargado);
-
-            JOptionPane.showMessageDialog(this, "Producto guardado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            
-            actualizarTabla();
-            limpiarCampos();
-            btnGuardar.setEnabled(true);
-
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Error en el formato de los números", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        agregarProducto();
     }//GEN-LAST:event_btnAgregarNuevoMouseClicked
+
+    private void btnEliminarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEliminarMouseClicked
+        // TODO add your handling code here:
+        eliminarProducto();
+    }//GEN-LAST:event_btnEliminarMouseClicked
+
+    private void btnGuardarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGuardarMouseClicked
+        // TODO add your handling code here:
+        guardarProducto();
+    }//GEN-LAST:event_btnGuardarMouseClicked
+
+    private void btnCerrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCerrarMouseClicked
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_btnCerrarMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -609,13 +638,10 @@ public class GestionDeProductos extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSpinner spinerStock;
     private javax.swing.JTable tablaProductos;
-    private javax.swing.JTextPane textCodigo;
-    private javax.swing.JTextPane textDescripcion;
-    private javax.swing.JTextPane textPrecio;
+    private javax.swing.JTextField textCodigo;
+    private javax.swing.JTextField textDescripcion;
+    private javax.swing.JTextField textPrecio;
     // End of variables declaration//GEN-END:variables
 }
